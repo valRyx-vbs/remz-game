@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>for remz💘</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background: linear-gradient(to right, #ffe0f5, #ffc1e3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #c2185b;
+      font-size: 6vw;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    #maze {
+      display: grid;
+      grid-template-columns: repeat(10, 8.5vw);
+      grid-template-rows: repeat(10, 8.5vw);
+      gap: 0.5vw;
+      margin-top: 5vw;
+      max-width: 100vw;
+    }
+
+    .cell {
+      width: 8.5vw;
+      height: 8.5vw;
+      background-color: #fff0f5;
+      background-position: center;
+      background-size: cover;
+      border: 1px solid #f8bbd0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wall {
+      background: #6a1b9a;
+    }
+
+    .player {
+      background-image: url('remzq.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .goal {
+      background-image: url('val2.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .kiss {
+      animation: kissPop 0.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes kissPop {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: #fffafc;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0,0,0,0.2);
+      font-size: 16px;
+      color: #880e4f;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .modal h2 {
+      font-family: 'Georgia', serif;
+      font-size: 6vw;
+      color: #d63384;
+      margin-bottom: 10px;
+    }
+
+    .modal p {
+      font-size: 4vw;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .modal button {
+      padding: 10px 20px;
+      background: #d63384;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal button:hover {
+      background: #b0005f;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    #controls {
+  margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#controls button {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  background-color: #f8bbd0;
+  border: none;
+  border-radius: 10px;
+  color: #4a148c;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#controls button:hover {
+  background-color: #f48fb1;
+}
+
+#controls div {
+  display: flex;
+  gap: 10px;
+}
+
+  </style>
+
+
+
+</head>
+
+<body>
+<div id="startOverlay" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,240,245,0.96);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+">
+  <h2 style="font-size: 6vw; color: #c2185b;">💘 Tap to Begin 💘</h2>
+  <p style="font-size: 4vw; color: #880e4f;">Remz, start the journey to kiss me</p>
+  <button id="startBtn" style="
+    margin-top: 20px;
+    font-size: 5vw;
+    padding: 10px 20px;
+    background: #d63384;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  ">Start</button>
+</div>
+
+
+<!-- Background Music -->
+<audio id="bgMusic" src="greenvalley.mp3" loop preload="auto"></audio>
+
+  <div id="maze"></div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h2>My Dearest 💌</h2>
+      <p>
+        hi baby! happy gf's day po, just wanna appreciate you giving me the love that i often thought i don't deserve.
+        kahit sa mga panahong hindi ko na kilala yung sarili ko, nanatili ka pa rin hanggang dulo.<br>
+        yours constant,
+        <br><strong>eli</strong>
+      </p>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <div id="controls">
+  <button onclick="move(0, -1)">⬆️</button>
+  <div>
+    <button onclick="move(-1, 0)">⬅️</button>
+    <button onclick="move(1, 0)">➡️</button>
+  </div>
+  <button onclick="move(0, 1)">⬇️</button>
+</div>
+
+
+  <script>
+    const width = 10;
+    const height = 10;
+    const mazeEl = document.getElementById("maze");
+    const modal = document.getElementById("modal");
+
+    const mazeMap = [
+      0,1,0,0,0,1,0,0,0,0,
+      0,1,0,1,0,1,0,1,1,0,
+      0,0,0,1,0,0,0,1,0,0,
+      1,1,0,1,1,1,0,1,0,1,
+      0,0,0,0,0,1,0,0,0,1,
+      0,1,1,1,0,1,1,1,0,1,
+      0,1,0,0,0,0,0,1,0,0,
+      0,1,0,1,1,1,0,1,1,0,
+      0,0,0,1,0,0,0,0,0,0,
+      1,1,0,1,0,1,1,1,1,0
+    ];
+
+    const player = { x: 0, y: 0 };
+    const goal = { x: 9, y: 9 };
+
+    function drawMaze() {
+      mazeEl.innerHTML = "";
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+
+          if (mazeMap[y * width + x] === 1) {
+            cell.classList.add("wall");
+          } else {
+            if (player.x === x && player.y === y) {
+              cell.classList.add("player");
+              if (x === goal.x && y === goal.y) {
+                cell.classList.add("kiss");
+              }
+            } else if (goal.x === x && goal.y === y) {
+              cell.classList.add("goal");
+            }
+          }
+
+          mazeEl.appendChild(cell);
+        }
+      }
+    }
+
+    function move(dx, dy) {
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+
+      if (
+        newX >= 0 && newX < width &&
+        newY >= 0 && newY < height &&
+        mazeMap[newY * width + newX] !== 1
+      ) {
+        player.x = newX;
+        player.y = newY;
+        drawMaze();
+        checkWin();
+      }
+    }
+
+    function checkWin() {
+      if (player.x === goal.x && player.y === goal.y) {
+        setTimeout(() => {
+          modal.style.display = "flex";
+        }, 200);
+      }
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    document.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "ArrowUp": move(0, -1); break;
+        case "ArrowDown": move(0, 1); break;
+        case "ArrowLeft": move(-1, 0); break;
+        case "ArrowRight": move(1, 0); break;
+      }
+    });
+
+    drawMaze();
+
+    const music = document.getElementById("bgMusic");
+
+// Start music on first key press
+let musicStarted = false;
+document.addEventListener("keydown", () => {
+  if (!musicStarted) {
+    music.play().catch(() => {});
+    musicStarted = true;
+  }
+});
+
+const startOverlay = document.getElementById("startOverlay");
+const startBtn = document.getElementById("startBtn");
+
+startBtn.addEventListener("click", () => {
+  music.volume = 0.5;
+  music.play().then(() => {
+    startOverlay.style.display = "none";
+  }).catch(err => {
+    alert("Please tap again to start music.");
+    console.error("Music play failed:", err);
+  });
+});
+
+
+  </script>
+</body>
+</html>
